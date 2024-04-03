@@ -1,50 +1,29 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { WeatherDisplayComponent } from '../weather-display/weather-display.component';
 import { WeatherServiceService } from '../weather-service.service';
 import { TimeData, WeatherData, CityData } from '../weather-data';
-import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Autocomplete } from '../weather-service.service';
+import { AutocompleteService } from 'app/autocomplete.service';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
   imports: [WeatherDisplayComponent, CommonModule],
-  template: `
-    <section class="search">
-      <form autocomplete="off">
-        <div class="autocomplete">
-          <input
-            id="searchField"
-            type="text"
-            placeholder="Search for a city"
-            (keydown.enter)="getWeather(city.value, $event)"
-            #city
-          />
-        </div>
-      </form>
-      <button class="primary" type="button" (click)="getWeather(city.value)">
-        Search
-      </button>
-    </section>
-    <section class="weather-display">
-      <app-weather-display
-        *ngIf="display"
-        [weather_data]="weather_data"
-        [time_data]="time_data"
-      ></app-weather-display>
-    </section>
-  `,
+  templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css',
 })
 export class HomepageComponent implements OnInit {
   weather_data: WeatherData | undefined;
   time_data: TimeData | undefined;
-  service = inject(WeatherServiceService);
-  route: ActivatedRoute = inject(ActivatedRoute);
   display: boolean = false;
+  port: number = this.document.location.port;
 
-  constructor(private autocompleteService: Autocomplete) {}
+  constructor(
+    private autocompleteService: AutocompleteService,
+    private weatherService: WeatherServiceService,
+    @Inject(DOCUMENT) private document: any
+  ) {}
 
   ngOnInit() {
     this.autocomplete();
@@ -53,7 +32,7 @@ export class HomepageComponent implements OnInit {
   async autocomplete() {
     let array: CityData[] = [];
 
-    await fetch('../assets/city.list.json')
+    await fetch(`http://localhost:${this.port}/`.concat('assets/city.list.json'))
       .then((response) => response.json())
       .then((json) => {
         array = json;
@@ -69,17 +48,20 @@ export class HomepageComponent implements OnInit {
   async getWeather(city_name: string, event?: any) {
     if (event) event.preventDefault();
 
-    (await this.service.getWeatherData(city_name)).subscribe((weather) => {
-      this.weather_data = this.service.convertToWeatherDataObject(weather);
-      this.display = true;
-      this.getTime(this.weather_data.lon, this.weather_data.lat);
-      this.autocomplete();
-    });
+    (await this.weatherService.getWeatherData(city_name)).subscribe(
+      (weather) => {
+        this.weather_data =
+          this.weatherService.convertToWeatherDataObject(weather);
+        this.display = true;
+        this.getTime(this.weather_data.lon, this.weather_data.lat);
+        this.autocomplete();
+      }
+    );
   }
 
   async getTime(lon: number, lat: number) {
-    (await this.service.getTimeData(lat, lon)).subscribe((time) => {
-      this.time_data = this.service.convertToTimeDataObject(time);
+    (await this.weatherService.getTimeData(lat, lon)).subscribe((time) => {
+      this.time_data = this.weatherService.convertToTimeDataObject(time);
     });
   }
 }

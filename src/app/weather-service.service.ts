@@ -48,7 +48,7 @@ export class WeatherServiceService {
         data.weather[0].description.charAt(0).toUpperCase() +
         data.weather[0].description.slice(1),
       weather_condition_icon: `https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`,
-      wind_speed: data.wind.speed + 'm/s',
+      wind_speed: this.calculateWindSpeed(data.wind.speed) + 'km/h',
       humidity: data.main.humidity + '%',
       pressure: data.main.pressure + ' hPa',
       timezone: this.calculateTimeZone(data.timezone),
@@ -58,6 +58,12 @@ export class WeatherServiceService {
       lat: data.coord.lat,
     };
     return data_object;
+  }
+
+  calculateWindSpeed(speed: number) {
+    //speed parameter is speed in m/s
+    const speed_kmh = (speed * 3.6).toFixed(2);
+    return speed_kmh;
   }
 
   calculateTimeZone(timezone: number) {
@@ -80,95 +86,5 @@ export class WeatherServiceService {
     }
     var formattedTime = hours + ':' + minutes;
     return formattedTime;
-  }
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class Autocomplete {
-  autocomplete(inp: HTMLInputElement, arr: CityData[]) {
-    let currentFocus: number;
-
-    inp.addEventListener('input', function (e) {
-      let a, b, i;
-      const val = this.value;
-      closeAllLists();
-      if (!val) {
-        return false;
-      }
-      currentFocus = -1;
-      a = document.createElement('div');
-      a.setAttribute('id', `${this.id}autocomplete-list`);
-      a.setAttribute('class', 'autocomplete-items');
-      this.parentNode?.appendChild(a);
-
-      if (val.length > 1) {
-        for (i = 0; i < arr.length; i++) {
-          if (
-            arr[i].name.substr(0, val.length).toUpperCase() ===
-            val.toUpperCase()
-          ) {
-            b = document.createElement('div');
-            b.innerHTML =
-              '<strong>' + arr[i].name.substr(0, val.length) + '</strong>';
-            b.innerHTML += arr[i].name.substr(val.length);
-            b.innerHTML += ', ' + arr[i].state + ' ' + arr[i].country;
-            b.innerHTML += "<input type='hidden' value='" + arr[i].id + "'>";
-            b.addEventListener('click', function (e) {
-              inp.value = this.getElementsByTagName('input')[0].value;
-              closeAllLists();
-            });
-            a.appendChild(b);
-          }
-        }
-      }
-      return;
-    });
-
-    inp.addEventListener('keydown', function (e) {
-      let x = document.getElementById(`${this.id}autocomplete-list`) as any;
-      if (x) x = x.getElementsByTagName('div');
-      if (e.keyCode == 40) {
-        currentFocus++;
-        addActive(x);
-      } else if (e.keyCode == 38) {
-        currentFocus--;
-        addActive(x);
-      } else if (e.keyCode == 13) {
-        e.preventDefault();
-        if (currentFocus > -1) {
-          if (x) x[currentFocus].click();
-        }
-      }
-    });
-
-    function addActive(x: HTMLCollectionOf<HTMLDivElement>) {
-      if (!x) return false;
-      removeActive(x);
-      if (currentFocus >= x.length) currentFocus = 0;
-      if (currentFocus < 0) currentFocus = x.length - 1;
-      x[currentFocus].classList.add('autocomplete-active');
-      return;
-    }
-
-    function removeActive(x: HTMLCollectionOf<HTMLDivElement>) {
-      for (let i = 0; i < x.length; i++) {
-        x[i].classList.remove('autocomplete-active');
-      }
-    }
-
-    function closeAllLists(elmnt?: any) {
-      const x = document.getElementsByClassName('autocomplete-items');
-      for (let i = 0; i < x.length; i++) {
-        if (elmnt != x[i] && elmnt != inp) {
-          (x[i] as HTMLElement).parentNode?.removeChild(x[i]);
-        }
-      }
-    }
-
-    document.addEventListener('click', function (e) {
-      closeAllLists(e.target);
-    });
   }
 }

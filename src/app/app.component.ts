@@ -6,14 +6,7 @@ import { HomepageComponent } from './homepage/homepage.component';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, RouterModule, HomepageComponent],
-  template: `<main>
-    <header class="brand-name">
-      <img class="brand-logo" src="/assets/weather-icon.svg" alt="logo" />
-    </header>
-    <section class="content">
-      <app-homepage></app-homepage>
-    </section>
-  </main>`,
+  templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent {

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<section class="search">
+    <form autocomplete="off">
+      <div class="autocomplete">
+        <input
+          id="searchField"
+          type="text"
+          placeholder="Search for a city"
+          (keydown.enter)="getWeather(city.value, $event)"
+          #city
+        />
+      </div>
+    </form>
+    <button class="primary" type="button" (click)="getWeather(city.value)">
+      Search
+    </button>
+  </section>
+  <section class="weather-display">
+    <app-weather-display
+      *ngIf="display"
+      [weather_data]="weather_data"
+      [time_data]="time_data"
+    ></app-weather-display>
+  </section>
