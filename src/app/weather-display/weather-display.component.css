@@ -1,0 +1,42 @@
+.basic-information {
+    text-align: center;
+  }
+  
+  .basic-information h1 {
+    font-size: 3.5vh;
+  }
+  
+  .basic-information h2 {
+    font-size: 4vh;
+    margin-top: 3vh;
+    padding-bottom: 1.5vh;
+  }
+
+  .basic-information h3 {
+    font-size: 2.5vh;
+  }
+
+  .basic-information h4 {
+    margin-top: 1vh;
+    font-size: 1.75vh;
+  }
+
+  .basic-information .weather-condition-icon {
+    width: 25vh;
+  }
+  
+  .detail-information {
+    margin-top: 3vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.25vh;
+  }
+
+  .detail-information .time-information {
+    margin-right: 3vh;
+  }
+
+  .detail-information .condition-information {
+    margin-left: 3vh;
+  }

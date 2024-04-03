@@ -1,0 +1,32 @@
+input[type="text"] {
+    border: solid 0.1vh;
+    border-color: black;
+    padding: 1.25vh 3vh;
+    border-radius: 1vh;
+    margin-right: 2vh;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .body {
+    height: 100%;
+    background-color: var(--primary-color);
+  }
+
+.autocomplete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+  .search {
+    padding-top: 3vh;
+    padding-bottom: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .search form {
+    text-align: center;
+  }

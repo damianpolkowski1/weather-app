@@ -1,0 +1,9 @@
+{
+    "/api": {
+      "target": "https://timeapi.io",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug"
+    }
+  }
+  

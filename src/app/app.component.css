@@ -1,0 +1,10 @@
+.brand-logo {
+    max-width: 8vh;
+    display: flex;
+    margin: 0vh auto;
+}
+
+.brand-name {
+    background-color: var(--secondary-color);
+    padding: 1vh 0;
+}
