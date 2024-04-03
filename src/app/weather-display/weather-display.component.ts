@@ -1,4 +1,4 @@
-import { Component, inject, input, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TimeData, WeatherData } from '../weather-data';
 
 @Component({
